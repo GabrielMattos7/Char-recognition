@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
-
+#TODO: offseat analysis to find spaces between words
+#TODO: create MLP model 
+#TODO: find dataset for the chars
+#TODO: train (jetson?)
+#TODO?: implement explainable AI
 # Load the image in grayscale
 img = cv2.imread("print.png", cv2.IMREAD_GRAYSCALE)
 
