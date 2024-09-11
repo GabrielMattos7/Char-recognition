@@ -6,9 +6,31 @@ import numpy as np
 #TODO: train (jetson?)
 #TODO?: implement explainable AI
 # Load the image in grayscale
+
+#pseudo for first todo
+# def check_for_gaps(contours):
+    # last_w = -1
+    # last_x2 = -1
+    # last_y = -1
+    # maan_w = -1
+    # mean_y = -1
+    # contour = contours[0]
+    # for contour in contours:
+        # x,_,w,_ = cv2.boundingRect(contour)
+        # x2 = x + w
+        # if((x - last_x2) > mean_w):
+            # print("theres a space.")
+        # elif((y - last_y) > mean_y):
+            # print("theres a new line")
+        # last_w = w
+        # last_x2 = x2
+        # last_y
+
+
 show = False
 img = cv2.imread("img.png", cv2.IMREAD_GRAYSCALE)
-
+# aaa
+# a a
 # Apply binary thresholding to convert the image to black and white
 ret, th1 = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
