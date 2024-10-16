@@ -2,17 +2,14 @@ import cv2
 import numpy as np
 import os
 
-def sort_contours(contours, method="left-to-right"):
-    reverse = False
-    i = 0
-    if method == "right-to-left" or method == "bottom-to-top":
-        reverse = True
-    if method == "top-to-bottom" or method == "bottom-to-top":
-        i = 1
-    bounding_boxes = [cv2.boundingRect(c) for c in contours]
-    (contours, bounding_boxes) = zip(*sorted(zip(contours, bounding_boxes),
-        key=lambda b:b[1][i], reverse=reverse))
-    return contours, bounding_boxes
+def sort_contours(contours):
+    def sorting_key(cnt):
+        x, y, w, h = cv2.boundingRect(cnt)
+        # if w < 5 and h < 5:
+            # return ()
+        return (y+h, x)  # Group by y bucket, then sort by x
+    return sorted(contours, key=sorting_key)
+
 
 def crop_characters(input_dir, output_dir):
     os.makedirs(output_dir, exist_ok=True)
@@ -28,16 +25,16 @@ def crop_characters(input_dir, output_dir):
             
             # Find contours
             contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            
+
             # Sort contours from left to right, then top to bottom
-            (contours, _) = sort_contours(contours, "top-to-bottom")
+            contours = sort_contours(contours)
             
             # Get the corresponding text
             text = os.path.splitext(filename)[0]
             
             for i, contour in enumerate(contours):
                 x, y, w, h = cv2.boundingRect(contour)
-                
+                # 
                 # Add some padding
                 padding = 2
                 x = max(0, x - padding)
