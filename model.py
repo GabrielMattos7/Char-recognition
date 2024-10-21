@@ -51,7 +51,7 @@ def create_model(input_shape, num_classes):
 
 def main():
     # Load data
-    train_dir = './train'
+    train_dir = './cropped_characters'
     images, labels = load_data(train_dir)
     
     # Preprocess data
