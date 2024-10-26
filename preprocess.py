@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import random
+import re
 
 def get_random_wikipedia_article():
     response = requests.get("https://en.wikipedia.org/wiki/Special:Random")
@@ -13,13 +14,24 @@ def extract_main_text(url, num_words):
     paragraphs = soup.select('#mw-content-text p')
     text = ' '.join([p.get_text() for p in paragraphs])
     words = text.split()[:num_words]
-    return ' '.join(words)
+    text = ' '.join(words).lower()
+    text = re.sub(r'[^a-z ]', '', text)
+    return text
 
 def save_to_file(text, index):
     os.makedirs('text', exist_ok=True)
     filename = f"text/{index:03d}.txt"
     with open(filename, 'w', encoding='utf-8') as file:
         file.write(text)
+
+def generate_strings(N, L, Chars):
+    strings = []
+    for i in range(1, N + 1):
+        length = random.randint(1, L)
+        string = ''.join(random.choice(Chars) for _ in range(length))
+        save_to_file(string, i) 
+        strings.append(string)
+    return strings
 
 def main(num_pages, words_per_page):
     for i in range(1, num_pages + 1):
@@ -28,8 +40,11 @@ def main(num_pages, words_per_page):
         save_to_file(text, i)
         print(f"Saved file {i:03d}.txt")
 
-if __name__ == "__main__":
-    num_pages = 5  # Specify the number of Wikipedia pages to scrape
-    words_per_page = 100  # Specify the number of words to extract from each page
-    main(num_pages, words_per_page)
 
+classes = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split(" ")
+
+if __name__ == "__main__":
+    num_pages = 5 
+    words_per_page = 100 
+    # main(num_pages, words_per_page)
+    print(generate_strings(50, 100, classes))
