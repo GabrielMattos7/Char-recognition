@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 from scipy.cluster.hierarchy import fcluster, linkage
-#func para debug
+
 def desenhar_contornos(imagem, linhas):
     # Obter as dimensões da imagem original
     altura, largura = imagem.shape[:2]
@@ -38,7 +38,7 @@ def groupby_contours(contours):
             compared_contour = contours[j]
             xc,yc,wc,hc = cv2.boundingRect(compared_contour)
             # if xa <= xc and xa + wa >= xc + wc and ya - yc > 0:
-            if xa - xc < 5 and  (ya - yc < 10 and yc + hc < ya + ha):
+            if xa - xc < 5 and  (ya - yc < 15 and yc + hc < ya + ha):
                 merged_x = min(xa, xc)
                 merged_y = min(ya, yc)   
                 merged_w = max(xa + wa, xc + wc) - merged_x   
@@ -48,8 +48,9 @@ def groupby_contours(contours):
                 output.append(np.array([merged_x,merged_y,merged_w,merged_h]))
                 used_contours.add(i)
                 used_contours.add(j)
-                break # lets supose that this can happend only once
-        if i not in used_contours and xa + wa > 15 and ya + ha > 15 : #made for filter semilicons and dots
+                break 
+
+        if i not in used_contours and xa + wa > 15 and ya + ha > 15 : #made for filter semicolons and dots
             output.append(np.array([xa,ya,wa,ha]))
     return output
 
@@ -124,7 +125,4 @@ def crop_characters(input_dir, output_dir):
                     cv2.imwrite(output_path, char_image)
                     # print(f"Saved {output_filename}")
                     i+=1
-if __name__ == "__main__":
-    input_directory = "./output_images"
-    output_directory = "./cropped_characters"
-    crop_characters(input_directory, output_directory)
+
