@@ -18,26 +18,22 @@ def desenhar_contornos(imagem, linhas):
             cv2.waitKey(0)
     # Mostrar a nova imagem com os contornos
     cv2.destroyAllWindows()
-    
     return nova_imagem
 
 def groupby_contours(contours):
-    used_contours = set()  # To track processed contours
+    used_contours = set()
     output = []
-    # print([cv2.boundingRect(contour)[2] for contour in contours])
     max_width = max([ cv2.boundingRect(contour)[2] for contour in contours])
-    print(max_width)
     for i in range(0,len(contours)):
         if i in used_contours:
             continue
         contour_aux = contours[i]
-        xa,ya,wa,ha = cv2.boundingRect(contour_aux) #// a in the end as `a`uxiliar
+        xa,ya,wa,ha = cv2.boundingRect(contour_aux)
         for j in range(i+1,len(contours)):
             if j in used_contours:
                 continue
             compared_contour = contours[j]
             xc,yc,wc,hc = cv2.boundingRect(compared_contour)
-            # if xa <= xc and xa + wa >= xc + wc and ya - yc > 0:
             if xa - xc < 5 and  (ya - yc < 15 and yc + hc < ya + ha):
                 merged_x = min(xa, xc)
                 merged_y = min(ya, yc)   
@@ -59,7 +55,7 @@ def sort_contours(contours):
     mean_H = [h for _,_,_,h in contours]
     def sorting_key(cnt):
         x, y, w, h = cnt
-        return (y+h, x)  # Group by y bucket, then sort by x
+        return (y+h, x)
     return sorted(contours, key=sorting_key)
 
 def cluster_lines(contours, vertical_threshold=20):
@@ -93,26 +89,16 @@ def crop_characters(input_dir, output_dir):
             img = cv2.imread(img_path)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             
-            # Apply threshold
             _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-            
-            # Find contours
             contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-            # Sort contours from left to right, then top to bottom
             contours = groupby_contours(contours)
             linhas = cluster_lines(contours)
-            # nova_imagem = desenhar_contornos(img, linhas)
             
-            # Get the corresponding text
             text = os.path.splitext(filename)[0]
             i = 0
             for linha in linhas:                
                 for contour in linha:
-                    print(contour)
                     x, y, w, h = contour
-                    # 
-                    # Add some padding
                     padding = 2
                     x = max(0, x - padding)
                     y = max(0, y - padding)
@@ -123,6 +109,6 @@ def crop_characters(input_dir, output_dir):
                     output_filename = f"{os.path.splitext(filename)[0]}_{i:03d}.png"
                     output_path = os.path.join(output_dir, output_filename)
                     cv2.imwrite(output_path, char_image)
-                    # print(f"Saved {output_filename}")
                     i+=1
+
 
