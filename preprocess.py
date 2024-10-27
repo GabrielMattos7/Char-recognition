@@ -27,8 +27,9 @@ def save_to_file(text, index):
 def generate_strings(N, L, Chars):
     strings = []
     for i in range(1, N + 1):
-        length = random.randint(1, L)
-        string = ''.join(random.choice(Chars) for _ in range(length))
+        length = random.randint(50, L)
+        string = ''.join(random.choice(Chars) if i % 20 != 0 else ''.join('\n') for i in range(1,length+1,1))
+        string+="\n"
         save_to_file(string, i) 
         strings.append(string)
     return strings
@@ -41,7 +42,7 @@ def main(num_pages, words_per_page):
         print(f"Saved file {i:03d}.txt")
 
 
-classes = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split(" ")
+classes = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".lower().split(" ")
 
 if __name__ == "__main__":
     num_pages = 5 

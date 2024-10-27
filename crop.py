@@ -20,7 +20,7 @@ def desenhar_contornos(imagem, linhas):
     cv2.destroyAllWindows()
     return nova_imagem
 
-def groupby_contours(contours):
+def groupby_contours(img, contours):
     used_contours = set()
     output = []
     max_width = max([ cv2.boundingRect(contour)[2] for contour in contours])
@@ -34,31 +34,32 @@ def groupby_contours(contours):
                 continue
             compared_contour = contours[j]
             xc,yc,wc,hc = cv2.boundingRect(compared_contour)
-            if xa - xc < 5 and  (ya - yc < 15 and yc + hc < ya + ha):
+            if xa - xc < 5 and  (ya - yc < 20 and yc + hc < ya + ha):
                 merged_x = min(xa, xc)
                 merged_y = min(ya, yc)   
                 merged_w = max(xa + wa, xc + wc) - merged_x   
                 merged_h = max(ya + ha, yc + hc) - merged_y
                 if merged_w > max_width:
                     break
+                
+                # Count non-zero pixels in the ROI
+                # non_empty_pixels = cv2.countNonZero(roi)
                 output.append(np.array([merged_x,merged_y,merged_w,merged_h]))
                 used_contours.add(i)
                 used_contours.add(j)
                 break 
 
-        if i not in used_contours and xa + wa > 15 and ya + ha > 15 : #made for filter semicolons and dots
+        if i not in used_contours and wa > 8 and ha > 8 : #made for filter semicolons and dots
+            # roi = img[ya:ya+ha, xa:xa+wa]  # Crop the region of interest based on contour
+            # cv2.imshow("debug",roi)
+            # cv2.waitKey(0)
+
             output.append(np.array([xa,ya,wa,ha]))
     return output
 
-def sort_contours(contours):
-    mean_y = [y for _,y,_,_ in contours]
-    mean_H = [h for _,_,_,h in contours]
-    def sorting_key(cnt):
-        x, y, w, h = cnt
-        return (y+h, x)
-    return sorted(contours, key=sorting_key)
 
-def cluster_lines(contours, vertical_threshold=20):
+
+def cluster_lines(contours, vertical_threshold=10):
     # Calcular o centro vertical de cada bounding box
     centers = np.array([y + h / 2 for _, y, _, h in contours])
 
@@ -91,7 +92,8 @@ def crop_characters(input_dir, output_dir):
             
             _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
             contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            contours = groupby_contours(contours)
+            contours = groupby_contours(binary, contours)
+            print(contours)
             linhas = cluster_lines(contours)
             
             text = os.path.splitext(filename)[0]
