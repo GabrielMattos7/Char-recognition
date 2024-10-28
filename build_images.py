@@ -10,7 +10,7 @@ def create_text_image(text_file, output_file, font_size=40, text_color=(0, 0, 0)
     draw = ImageDraw.Draw(image)
 
     # Use 'arial.ttf' which is typically less bold
-    font = ImageFont.truetype("./Inconsolata-Light.ttf", font_size)
+    font = ImageFont.truetype("./arial.ttf", font_size)
 
     max_width = image_size[0] - 20  # 10px padding on each side
     wrapped_text = textwrap.fill(text, width=max_width // (font_size // 2))

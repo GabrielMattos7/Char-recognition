@@ -48,4 +48,4 @@ if __name__ == "__main__":
     num_pages = 5 
     words_per_page = 100 
     # main(num_pages, words_per_page)
-    print(generate_strings(50, 100, classes))
+    print(generate_strings(50, 150, classes))
