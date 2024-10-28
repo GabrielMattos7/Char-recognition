@@ -14,7 +14,7 @@ def extract_main_text(url, num_words):
     paragraphs = soup.select('#mw-content-text p')
     text = ' '.join([p.get_text() for p in paragraphs])
     words = text.split()[:num_words]
-    text = ' '.join(words).lower()
+    text = ' '.join(words).lower() #now we are going to upper cases to 
     text = re.sub(r'[^a-z ]', '', text)
     return text
 
@@ -47,5 +47,5 @@ classes = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".lower().split(" 
 if __name__ == "__main__":
     num_pages = 5 
     words_per_page = 100 
-    # main(num_pages, words_per_page)
-    print(generate_strings(50, 150, classes))
+    main(num_pages, words_per_page)
+    # print(generate_strings(50, 150, classes))

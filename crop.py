@@ -29,12 +29,12 @@ def groupby_contours(img, contours):
             continue
         contour_aux = contours[i]
         xa,ya,wa,ha = cv2.boundingRect(contour_aux)
-        if wa > 15:
-            roi = img[ya:ya+ha, xa:xa+wa]  # Crop the region of interest based on contour
-            
-            cv2.imshow("debug",roi)
-            
-            cv2.waitKey(1000)
+        # if wa > 15:
+            # roi = img[ya:ya+ha, xa:xa+wa]  # Crop the region of interest based on contour
+            # 
+            # cv2.imshow("debug",roi)
+            # 
+            # cv2.waitKey(1000)
 
         for j in range(i+1,len(contours)):
             if j in used_contours:
@@ -97,14 +97,12 @@ def crop_characters(input_dir, output_dir):
             img_path = os.path.join(input_dir, filename)
             img = cv2.imread(img_path)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            _, binary = cv2.threshold(gray, 3, 255, cv2.THRESH_BINARY_INV) # + cv2.THRESH_OTSU)
-            cv2.imshow("bora bil", binary)
-            cv2.waitKey(0)
+            _, binary = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY_INV) # + cv2.THRESH_OTSU)
             contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             print(img_path)
             contours = groupby_contours(gray, contours)
             linhas = cluster_lines(contours)
-            aa = desenhar_contornos(img, linhas)
+            # aa = desenhar_contornos(img, linhas)
             text = os.path.splitext(filename)[0]
             i = 0
             for linha in linhas:                
