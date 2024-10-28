@@ -47,7 +47,7 @@ crop_inference_image()
 
 def predict_character(image_path):
     new_image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-    preprocessed_image = preprocess_image(new_image, 28, 17)
+    preprocessed_image = preprocess_image(new_image, 32, 27)
     standardized_image = scaler.transform(preprocessed_image)
     prediction = model.predict(standardized_image)
     predicted_class = np.argmax(prediction, axis=1)

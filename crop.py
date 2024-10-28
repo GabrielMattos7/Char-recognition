@@ -97,7 +97,7 @@ def crop_characters(input_dir, output_dir):
             img_path = os.path.join(input_dir, filename)
             img = cv2.imread(img_path)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            _, binary = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY_INV) # + cv2.THRESH_OTSU)
+            _, binary = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
             contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             print(img_path)
             contours = groupby_contours(gray, contours)
