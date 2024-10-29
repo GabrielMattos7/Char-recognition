@@ -23,51 +23,72 @@ def desenhar_contornos(imagem, linhas):
 def groupby_contours(img, contours):
     used_contours = set()
     output = []
-    max_width = max([ cv2.boundingRect(contour)[2] for contour in contours])
-    for i in range(0,len(contours)):
+    cv2.imshow('aaa',img)
+    cv2.waitKey(0)
+    max_width = max([cv2.boundingRect(contour)[2] for contour in contours])
+
+    # Define tolerance values for horizontal alignment and vertical distance
+    horizontal_tolerance = 3  # Allow slight horizontal misalignment
+    vertical_distance_threshold = 15  # Allow some vertical space between parts
+
+    for i in range(len(contours)):
         if i in used_contours:
             continue
         contour_aux = contours[i]
-        xa,ya,wa,ha = cv2.boundingRect(contour_aux)
-        # if wa > 15:
-            # roi = img[ya:ya+ha, xa:xa+wa]  # Crop the region of interest based on contour
-            # 
-            # cv2.imshow("debug",roi)
-            # 
-            # cv2.waitKey(1000)
+        xa, ya, wa, ha = cv2.boundingRect(contour_aux)
+        # print(f"({xa},{ya})({xa+wa},{ya+ha})")
 
-        for j in range(i+1,len(contours)):
+        for j in range(i + 1, len(contours)):
             if j in used_contours:
                 continue
             compared_contour = contours[j]
-            xc,yc,wc,hc = cv2.boundingRect(compared_contour)
-            if xa+wa == xc + wc and  (ya - yc < 10 and yc + hc < ya + ha):
-                
+            xc, yc, wc, hc = cv2.boundingRect(compared_contour)
+            # print(f"({xc},{yc})({xc+wc},{yc+hc})")
+            # Check for vertical alignment with small horizontal tolerance
+            if (abs(xa - xc) <= horizontal_tolerance or
+                abs((xa + wa) - (xc + wc)) <= horizontal_tolerance):
+                # Check if the contours are close enough vertically
+                if(ya <= yc and yc <= ya + ha + vertical_distance_threshold):
 
-                merged_x = min(xa, xc)
-                merged_y = min(ya, yc)   
-                merged_w = max(xa + wa, xc + wc) - merged_x   
-                if merged_w > max_width:
+                    # Merge the contours into a single bounding box
+                    merged_x = min(xa, xc)
+                    merged_y = min(ya, yc)
+                    merged_w = max(xa + wa, xc + wc) - merged_x
+                    merged_h = max(ya + ha, yc + hc) - merged_y
+
+                    if merged_w > max_width:
+                        break
+
+                    output.append(np.array([merged_x, merged_y, merged_w, merged_h]))
+                    used_contours.add(i)
+                    used_contours.add(j)
                     break
-                merged_h = max(ya + ha, yc + hc) - merged_y
-                # roi = img[merged_y:merged_y+merged_h, merged_x:merged_x+merged_w]  # Crop the region of interest based on contour
-                # cv2.imshow("debug",roi)
-                # cv2.waitKey(0)
-                
-                # Count non-zero pixels in the ROI
-                # non_empty_pixels = cv2.countNonZero(roi)
-                output.append(np.array([merged_x,merged_y,merged_w,merged_h]))
-                used_contours.add(i)
-                used_contours.add(j)
-                break 
+            elif  xa == xc and (ya + wa) + 11 == yc: #//trying to get ; and :
+                    print("adhbasuiyhduiashd")
+                    # Merge the contours into a single bounding box
+                    merged_x = min(xa, xc)
+                    merged_y = min(ya, yc)
+                    merged_w = max(xa + wa, xc + wc) - merged_x
+                    merged_h = max(ya + ha, yc + hc) - merged_y
 
-        if i not in used_contours : #and wa > 8 and ha > 8 : #made for filter semicolons and dots
-            output.append(np.array([xa,ya,wa,ha]))
+                    if merged_w > max_width:
+                        break
+
+                    output.append(np.array([merged_x, merged_y, merged_w, merged_h]))
+                    used_contours.add(i)
+                    used_contours.add(j)
+                    break
+
+        # Add ungrouped contours as individual elements
+        if i not in used_contours:
+            output.append(np.array([xa, ya, wa, ha]))
+
     return output
 
 
 
-def cluster_lines(contours, vertical_threshold=5):
+
+def cluster_lines(contours, vertical_threshold=8):
     # Calcular o centro vertical de cada bounding box
     centers = np.array([y + h / 2 for _, y, _, h in contours])
 
@@ -100,7 +121,7 @@ def crop_characters(input_dir, output_dir):
             _, binary = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
             contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             print(img_path)
-            contours = groupby_contours(gray, contours)
+            contours = groupby_contours(binary, contours)
             linhas = cluster_lines(contours)
             # aa = desenhar_contornos(img, linhas)
             text = os.path.splitext(filename)[0]
