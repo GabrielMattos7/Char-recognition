@@ -15,8 +15,8 @@ def create_inference_image_from_text():
 
 def crop_inference_image():
     directory = "./inference"
-    crop_characters(directory, directory)
-
+    bounding_boxes = crop_characters(directory, directory)
+    return bounding_boxes
 
 def preprocess_image(image, max_height, max_width):
     # Get the current height and width of the image
@@ -43,11 +43,11 @@ def preprocess_image(image, max_height, max_width):
     return flattened_img
 
 create_inference_image_from_text()
-crop_inference_image()
+aaa = crop_inference_image()
 
 def predict_character(image_path):
     new_image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-    preprocessed_image = preprocess_image(new_image, 32, 27)
+    preprocessed_image = preprocess_image(new_image, 32, 32)
     standardized_image = scaler.transform(preprocessed_image)
     prediction = model.predict(standardized_image)
     predicted_class = np.argmax(prediction, axis=1)
@@ -63,9 +63,22 @@ scaler = joblib.load('scaler.pkl')
 inference_dir = "./inference"
 predicted_chars = []
 
-image_files = sorted([f for f in os.listdir(inference_dir) if '_' in f and f.endswith('.png')])
+spacing_threshold = 9  # Adjust as needed for your font/spacing
+predicted_chars = []
+previous_horizontal = 0
 
-for image_file in image_files:
+
+image_files = sorted([f for f in os.listdir(inference_dir) if '_' in f and f.endswith('.png')])
+# print(len(image_files))
+# print(len(aaa))
+for image_file, (x,w,_,_) in zip(image_files, aaa):
+    # distance = abs(x - previous_horizontal)  # Using abs to avoid negative values
+    # print(distance)
+    # 
+    # if distance >= spacing_threshold:
+        # predicted_chars.append(" ")  # Add space when distance exceeds threshold
+    # previous_horizontal = x + w
+    predicted_chars.append(" ")
     image_path = os.path.join(inference_dir, image_file)
     predicted_char = predict_character(image_path)
     predicted_chars.append(predicted_char)
@@ -77,4 +90,3 @@ print(f"Predicted string: {predicted_string}")
 for image_file in image_files:
     image_path = os.path.join(inference_dir, image_file)
     os.remove(image_path)
-
