@@ -24,30 +24,30 @@ def create_label_files(text_dir, cropped_dir):
             label = all_text[text_index]
             
             # Check for double 'f's
-            if label == 'f' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'f':
-                label = 'ff'
-                text_index += 1  # Skip the next 'f'
-            elif label == 't' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 't':
-                label = 'tt'
-                text_index += 1  # Skip the next 'f'
-            elif label == 'r' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 't':
-                label = 'rt'
-                text_index += 1  # Skip the next 'f'
-            elif label == 'r' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'f':
-                label = 'rf'
-                text_index += 1  # Skip the next 'f'
-            elif label == 't' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'w':
-                label = 'tw'
-                text_index +=1
-            elif label == 'y' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'w':
-                label = 'yw'
-                text_index +=1
-            elif label == 'f' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 't':
-                label = 'ft'
-                text_index +=1
-            elif label == 'r' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'v':
-                label = 'rv'
-                text_index +=1                                                                                          
+            # if label == 'f' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'f':
+            #     label = 'ff'
+            #     text_index += 1  # Skip the next 'f'
+            # elif label == 't' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 't':
+            #     label = 'tt'
+            #     text_index += 1  # Skip the next 'f'
+            # elif label == 'r' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 't':
+            #     label = 'rt'
+            #     text_index += 1  # Skip the next 'f'
+            # elif label == 'r' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'f':
+            #     label = 'rf'
+            #     text_index += 1  # Skip the next 'f'
+            # elif label == 't' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'w':
+            #     label = 'tw'
+            #     text_index +=1
+            # elif label == 'y' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'w':
+            #     label = 'yw'
+            #     text_index +=1
+            # elif label == 'f' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 't':
+            #     label = 'ft'
+            #     text_index +=1
+            # elif label == 'r' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'v':
+            #     label = 'rv'
+            #     text_index +=1                                                                                          
 
             label_file = os.path.splitext(image_file)[0] + '.label'
             with open(os.path.join(cropped_dir, label_file), 'w', encoding='utf-8') as f:

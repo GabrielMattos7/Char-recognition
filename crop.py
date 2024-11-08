@@ -29,6 +29,8 @@ def groupby_contours(img, contours):
             continue
         contour_aux = contours[i]
         xa,ya,wa,ha = cv2.boundingRect(contour_aux)
+        if wa == 1 or ha == 1:
+            continue 
         # if wa > 15:
             # roi = img[ya:ya+ha, xa:xa+wa]  # Crop the region of interest based on contour
             # 
@@ -97,7 +99,10 @@ def crop_characters(input_dir, output_dir):
             img = cv2.imread(img_path)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             _, binary = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-            contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            _, binary2 = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV)# + cv2.THRESH_OTSU)
+
+            contours, _ = cv2.findContours(binary2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            # cv2.imshow("binary",binary)
             contours = groupby_contours(binary, contours)
             linhas = cluster_lines(contours)
 
@@ -122,6 +127,10 @@ def crop_characters(input_dir, output_dir):
                     # Append bounding box (x, y, w, h) to bounding_boxes list
                     # print((x, y, w, h))
                     bounding_boxes.append((x, y, w, h))
+            cv2.imshow("binary2",binary2)
+            cv2.waitKey(0)
 
     return bounding_boxes
 
+if __name__ == '__main__':
+    _ = crop_characters("output_images", "cropped_characters")
