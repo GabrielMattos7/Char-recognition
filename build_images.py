@@ -26,4 +26,3 @@ def process_all_text_files(input_dir, output_dir, font_size=20, text_color=(0, 0
             input_path = os.path.join(input_dir, filename)
             output_path = os.path.join(output_dir, f"{os.path.splitext(filename)[0]}.png")
             create_text_image(input_path, output_path, font_size, text_color, bg_color, image_size)
-

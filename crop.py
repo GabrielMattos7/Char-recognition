@@ -43,14 +43,17 @@ def groupby_contours(img, contours):
                 continue
             compared_contour = contours[j]
             xc,yc,wc,hc = cv2.boundingRect(compared_contour)
-            if xa+wa == xc + wc and  (ya - yc < 10 and yc + hc < ya + ha):
-                
 
+            if (xa+wa == xc + wc and  (ya - yc < 10 and yc + hc < ya + ha)) or (xa == xc and ya - yc < 16) or (ya == yc and xa - xc < 6) or ((xa + wa) == xc and (abs((yc + hc) - ya) < 2)):
+# / esta dividido em duas parte, uma que possiu grande parte do corpo(inferior) 
+#e outra que esta separada devido ao corte de um pixel
+#considerando que a parte superior é countourC e a inferior contourA
+#devemos chegar que: (xa+ wa) - xc < 3 e que ya - (yc+hc) < 3 
                 merged_x = min(xa, xc)
                 merged_y = min(ya, yc)   
                 merged_w = max(xa + wa, xc + wc) - merged_x   
-                if merged_w > max_width:
-                    break
+
+                    # break
                 merged_h = max(ya + ha, yc + hc) - merged_y
                 # roi = img[merged_y:merged_y+merged_h, merged_x:merged_x+merged_w]  # Crop the region of interest based on contour
                 # cv2.imshow("debug",roi)
@@ -102,7 +105,7 @@ def crop_characters(input_dir, output_dir):
             _, binary2 = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY_INV)# + cv2.THRESH_OTSU)
 
             contours, _ = cv2.findContours(binary2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            cv2.imshow("binary",binary2)
+            # cv2.imshow("binary",binary2)
             contours = groupby_contours(binary2, contours)
             linhas = cluster_lines(contours)
 
@@ -127,7 +130,7 @@ def crop_characters(input_dir, output_dir):
                     # Append bounding box (x, y, w, h) to bounding_boxes list
                     # print((x, y, w, h))
                     bounding_boxes.append((x, y, w, h))
-            cv2.imshow("binary2",binary2)
+            cv2.imshow(filename,binary2)
             cv2.waitKey(0)
 
     return bounding_boxes

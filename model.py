@@ -170,4 +170,4 @@ if __name__ == "__main__":
     build_images()
     crop()
     add_labels()
-    main()
+    # main()
