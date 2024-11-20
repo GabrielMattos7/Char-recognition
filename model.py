@@ -6,10 +6,10 @@ print("asduiasgudasguid")
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.metrics import classification_report
-# from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential
 print("tensorflow XD")
-# from tensorflow.keras.layers import Dense, Flatten, Input
-# from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.layers import Dense, Flatten, Input
+from tensorflow.keras.utils import to_categorical
 from crop import crop_characters
 from build_images import process_all_text_files
 from build_dataset import create_label_files
@@ -170,4 +170,4 @@ if __name__ == "__main__":
     build_images()
     crop()
     add_labels()
-    # main()
+    main()
