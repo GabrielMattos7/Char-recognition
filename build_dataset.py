@@ -24,9 +24,9 @@ def create_label_files(text_dir, cropped_dir):
             label = all_text[text_index]
             
             # Check for double 'f's
-            if label == 'f' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'f':
-                label = 'ff'
-                text_index += 1  # Skip the next 'f'
+            # if label == 'f' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 'f':
+                # label = 'ff'
+                # text_index += 1  # Skip the next 'f'
             # elif label == 't' and text_index + 1 < len(all_text) and all_text[text_index + 1] == 't':
             #     label = 'tt'
             #     text_index += 1  # Skip the next 'f'

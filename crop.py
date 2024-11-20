@@ -23,30 +23,44 @@ def desenhar_contornos(imagem, linhas):
 def groupby_contours(img, contours):
     used_contours = set()
     output = []
-    max_width = max([ cv2.boundingRect(contour)[2] for contour in contours])
-    for i in range(0,len(contours)):
+    # max_width = max([ cv2.boundingRect(contour)[2] for contour in contours])
+    for i in range(len(contours)):
+        
         if i in used_contours:
             continue
         contour_aux = contours[i]
-        xa,ya,wa,ha = cv2.boundingRect(contour_aux)
-        if wa == 1 or ha == 1:
-            continue 
-        # if wa > 15:
-            # roi = img[ya:ya+ha, xa:xa+wa]  # Crop the region of interest based on contour
-            # 
-            # cv2.imshow("debug",roi)
-            # 
-            # cv2.waitKey(1000)
 
+        # Get bounding box of the contour
+        xa, ya, wa, ha = cv2.boundingRect(contour_aux)
+        if wa == 1 and ha == 1:
+            continue
+        aspect_ratio = ha / wa
+        if aspect_ratio == 1.4:  # this aspect ratio is related to ff 
+            roi = img[ya:ya + ha, xa:xa + wa]
+            left_x = wa//2
+
+            left_part = img[ya : ya + ha, xa : xa + left_x]
+            right_part = img[ya : ya + ha, xa + left_x : xa + wa]
+
+            output.append(np.array([xa,ya,left_x,ha]))
+            output.append(np.array([xa+left_x,ya,wa-left_x,ha]))
+            used_contours.add(i)
+            # Display the potential "ff" region
+            cv2.imshow("Potential ff Region", roi)
+            cv2.imshow("left part ", left_part)
+            cv2.imshow("right part ", right_part)
+            cv2.waitKey(0)
+            continue
+
+#(xa == xc and ya - yc < 16) or
         for j in range(i+1,len(contours)):
             if j in used_contours:
                 continue
             compared_contour = contours[j]
             xc,yc,wc,hc = cv2.boundingRect(compared_contour)
             if (xa+wa == xc + wc and  (ya - yc < 10 and yc + hc < ya + ha)) or \
-               (xa == xc and ya - yc < 16) or (wa == wc and wc == 2 and abs(xa - xc) <= 6 and abs((yc + hc) - (ya + ha)) == 1) or ((xa + wa) == xc and (abs((yc + hc) - ya) < 2)) or \
+                (wa == wc and wc == 2 and abs(xa - xc) <= 6 and abs((yc + hc) - (ya + ha)) == 1) or ((xa + wa) == xc and (abs((yc + hc) - ya) < 2)) or \
                 ((xc <= xa and xc + wc >= xa) and (abs(yc + hc - ya) <= 2)):
-                # ? upper part will be c and lower part . will be a
                 
                 merged_x = min(xa, xc)
                 merged_y = min(ya, yc)   
@@ -129,8 +143,6 @@ def crop_characters(input_dir, output_dir):
                     # Append bounding box (x, y, w, h) to bounding_boxes list
                     # print((x, y, w, h))
                     bounding_boxes.append((x, y, w, h))
-            cv2.imshow(filename,binary2)
-            cv2.waitKey(0)
 
     return bounding_boxes
 
