@@ -20,9 +20,15 @@ def create_text_image(text_file, output_file, font_size=40, text_color=(0, 0, 0)
 
 def process_all_text_files(input_dir, output_dir, font_size=20, text_color=(0, 0, 0), bg_color=(255, 255, 255), image_size=(1000, 800)):
     os.makedirs(output_dir, exist_ok=True)
-
+    print("a")
     for filename in os.listdir(input_dir):
+        print("b")
+
         if filename.endswith('.txt'):
+            print("c")
             input_path = os.path.join(input_dir, filename)
             output_path = os.path.join(output_dir, f"{os.path.splitext(filename)[0]}.png")
             create_text_image(input_path, output_path, font_size, text_color, bg_color, image_size)
+
+if __name__ == "__main__":
+    process_all_text_files("./text", "./output_images")

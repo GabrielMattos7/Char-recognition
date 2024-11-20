@@ -43,12 +43,11 @@ def groupby_contours(img, contours):
                 continue
             compared_contour = contours[j]
             xc,yc,wc,hc = cv2.boundingRect(compared_contour)
-
-            if (xa+wa == xc + wc and  (ya - yc < 10 and yc + hc < ya + ha)) or (xa == xc and ya - yc < 16) or (ya == yc and xa - xc < 6) or ((xa + wa) == xc and (abs((yc + hc) - ya) < 2)):
-# / esta dividido em duas parte, uma que possiu grande parte do corpo(inferior) 
-#e outra que esta separada devido ao corte de um pixel
-#considerando que a parte superior é countourC e a inferior contourA
-#devemos chegar que: (xa+ wa) - xc < 3 e que ya - (yc+hc) < 3 
+            if (xa+wa == xc + wc and  (ya - yc < 10 and yc + hc < ya + ha)) or \
+               (xa == xc and ya - yc < 16) or (wa == wc and wc == 2 and abs(xa - xc) <= 6 and abs((yc + hc) - (ya + ha)) == 1) or ((xa + wa) == xc and (abs((yc + hc) - ya) < 2)) or \
+                ((xc <= xa and xc + wc >= xa) and (abs(yc + hc - ya) <= 2)):
+                # ? upper part will be c and lower part . will be a
+                
                 merged_x = min(xa, xc)
                 merged_y = min(ya, yc)   
                 merged_w = max(xa + wa, xc + wc) - merged_x   
