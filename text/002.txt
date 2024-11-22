@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 2,3-Xylidine is the organic compound with the formula C6H3(CH3)2NH2. it is one of several isomeric xylidines. It is a colorless viscous liquid. The compound is used in the production of the drug mefenamic acid and the herbicide xylachlor.1 This article about an organic compound is a stub. You can help Wikipedia by expanding it.
+=======
+General elections were held in San Marino on 14 August 1955.[1] Although the Sammarinese Christian Democratic Party remained the largest party, winning 23 of the 60 seats in the Grand and General Council,[2] the alliance of the Sammarinese Communist Party and Sammarinese Socialist Party retained its majority. Voters had to be citizens of San Marino, male and at least 24 years old. This San Marino–related article is a stub. You can help Wikipedia by expanding it. This European election-related article is a stub. You can help Wikipedia by expanding it.
+>>>>>>> 934600ef207217ff50ab5a31d80202a0f0d65e7d

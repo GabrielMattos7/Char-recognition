@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 Erionota is a genus of skippers in the family Hesperiidae. It is found in the Indomalayan realm2 The larvae feed on Gramineae, Palmae and Musaceae. 3 This Erionotini-related article is a stub. You can help Wikipedia by expanding it.
+=======
+James G. Davis (June 20, 1931– September 28, 2016) was an American contemporary artist best known for his intricate paintings and works on paper. He was acclaimed for his figurative pieces that explore issues of gender and social status, along with mythological and historical references that often have a metaphorical twist. Davis was born in Springfield, Missouri as one of six brothers. His mother died when he was three years old. He spent a year of his life in an orphanage. At the age of eleven, Davis was involved in a train accident that resulted in a long hospitalization and
+>>>>>>> 934600ef207217ff50ab5a31d80202a0f0d65e7d
