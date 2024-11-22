@@ -21,6 +21,8 @@ def desenhar_contornos(imagem, linhas):
     return nova_imagem
 
 def groupby_contours(img, contours):
+    # cv2.imshow("aa",img)
+    # cv2.waitKey(0)
     used_contours = set()
     output = []
     # max_width = max([ cv2.boundingRect(contour)[2] for contour in contours])
@@ -45,12 +47,14 @@ def groupby_contours(img, contours):
             output.append(np.array([xa,ya,left_x,ha]))
             output.append(np.array([xa+left_x,ya,wa-left_x,ha]))
             used_contours.add(i)
+            print("Potential ff Region")
             # Display the potential "ff" region
-            cv2.imshow("Potential ff Region", roi)
-            cv2.imshow("left part ", left_part)
-            cv2.imshow("right part ", right_part)
-            cv2.waitKey(0)
+            # cv2.imshow("Potential ff Region", roi)
+            # cv2.imshow("left part ", left_part)
+            # cv2.imshow("right part ", right_part)
+            # cv2.waitKey(0)
             continue
+#            if (xa == xc and xa+wa == xc + wc and  (abs(yc+hc - ya) < 10 and yc + hc < ya + ha)) or \
 
 #(xa == xc and ya - yc < 16) or
         for j in range(i+1,len(contours)):
@@ -58,22 +62,21 @@ def groupby_contours(img, contours):
                 continue
             compared_contour = contours[j]
             xc,yc,wc,hc = cv2.boundingRect(compared_contour)
-            if (xa+wa == xc + wc and  (ya - yc < 10 and yc + hc < ya + ha)) or \
+            # (xa+wa == xc + wc and  (abs(ya - yc) < 14 and yc + hc < ya + ha)) is for : , ; , i , j
+            # (wa == wc and wc == 2 and abs(xa - xc) <= 6 and abs((yc + hc) - (ya + ha)) == 1) this is for " 
+            # ((xc <= xa and xc + wc >= xa) and (abs(yc + hc - ya) <= 2)) this is for ! ? 
+            # ((xa + wa) == xc and (abs((yc + hc) - ya) < 2)) this is to group-by /
+            if (xa+wa == xc + wc and  (abs(ya - yc) < 14 and yc + hc < ya + ha)) or \
                 (wa == wc and wc == 2 and abs(xa - xc) <= 6 and abs((yc + hc) - (ya + ha)) == 1) or ((xa + wa) == xc and (abs((yc + hc) - ya) < 2)) or \
                 ((xc <= xa and xc + wc >= xa) and (abs(yc + hc - ya) <= 2)):
-                
+                    
                 merged_x = min(xa, xc)
                 merged_y = min(ya, yc)   
                 merged_w = max(xa + wa, xc + wc) - merged_x   
 
-                    # break
                 merged_h = max(ya + ha, yc + hc) - merged_y
                 # roi = img[merged_y:merged_y+merged_h, merged_x:merged_x+merged_w]  # Crop the region of interest based on contour
-                # cv2.imshow("debug",roi)
-                # cv2.waitKey(0)
                 
-                # Count non-zero pixels in the ROI
-                # non_empty_pixels = cv2.countNonZero(roi)
                 output.append(np.array([merged_x,merged_y,merged_w,merged_h]))
                 used_contours.add(i)
                 used_contours.add(j)
