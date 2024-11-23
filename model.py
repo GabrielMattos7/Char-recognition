@@ -142,6 +142,7 @@ def main():
     y_true_classes = np.argmax(y_test, axis=1)
     
     class_names = label_encoder.classes_
+    print(class_names)
     print("\nClassification Report:")
     print(classification_report(y_true_classes, y_pred_classes, target_names=class_names, zero_division=1))
 
