@@ -8,8 +8,6 @@ def create_text_image(text_file, output_file, font_size=40, text_color=(0, 0, 0)
 
     image = Image.new('RGB', image_size, bg_color)
     draw = ImageDraw.Draw(image)
-
-    # Use 'arial.ttf' which is typically less bold
     font = ImageFont.truetype("./arial.ttf", font_size)
 
     max_width = image_size[0] - 20  # 10px padding on each side

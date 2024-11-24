@@ -53,7 +53,7 @@ def infer_text():
     inference_dir = "./inference"
     predicted_chars = []
 
-    spacing_threshold = 1  # Adjust as needed for your font/spacing
+    spacing_threshold = 1 
     previous_x = 0
     previous_w = 0
     previous_char = ''
@@ -64,7 +64,7 @@ def infer_text():
         distance = max(0, x - (previous_x + previous_w))
         print(f"Current x: {x}, Previous x+w: {previous_x + previous_w}, Distance: {distance}")
         if distance >= spacing_threshold:
-            predicted_chars.append(" ")  # Add space when distance exceeds threshold
+            predicted_chars.append(" ") 
         
         image_path = os.path.join(inference_dir, image_file)
         predicted_char = predict_character(image_path, scaler, model, label_encoder)
@@ -79,7 +79,6 @@ def infer_text():
 
     print(f"Predicted string: {predicted_string}")
 
-    # Clean up temporary image files
     for image_file in image_files:
         image_path = os.path.join(inference_dir, image_file)
         os.remove(image_path)

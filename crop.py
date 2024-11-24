@@ -3,36 +3,14 @@ import numpy as np
 import os
 from scipy.cluster.hierarchy import fcluster, linkage
 
-def desenhar_contornos(imagem, linhas):
-    # Obter as dimensões da imagem original
-    altura, largura = imagem.shape[:2]
-    
-    nova_imagem = np.ones((altura, largura, 3), dtype=np.uint8) *255
-    
-    for linha in linhas:
-        for contorno in linha:
-            x,y,w,h = contorno
-
-            nova_imagem[y:y+h, x:x+w] = imagem[y:y+h,x:x+w]
-            cv2.imshow('Contornos', nova_imagem)
-            cv2.waitKey(0)
-    # Mostrar a nova imagem com os contornos
-    cv2.destroyAllWindows()
-    return nova_imagem
-
 def groupby_contours(img, contours):
-    # cv2.imshow("aa",img)
-    # cv2.waitKey(0)
     used_contours = set()
     output = []
-    # max_width = max([ cv2.boundingRect(contour)[2] for contour in contours])
     for i in range(len(contours)):
-        
         if i in used_contours:
             continue
         contour_aux = contours[i]
 
-        # Get bounding box of the contour
         xa, ya, wa, ha = cv2.boundingRect(contour_aux)
         if wa == 1 and ha == 1:
             continue
@@ -47,16 +25,8 @@ def groupby_contours(img, contours):
             output.append(np.array([xa,ya,left_x,ha]))
             output.append(np.array([xa+left_x,ya,wa-left_x,ha]))
             used_contours.add(i)
-            print("Potential ff Region")
-            # Display the potential "ff" region
-            # cv2.imshow("Potential ff Region", roi)
-            # cv2.imshow("left part ", left_part)
-            # cv2.imshow("right part ", right_part)
-            # cv2.waitKey(0)
             continue
-#            if (xa == xc and xa+wa == xc + wc and  (abs(yc+hc - ya) < 10 and yc + hc < ya + ha)) or \
 
-#(xa == xc and ya - yc < 16) or
         for j in range(i+1,len(contours)):
             if j in used_contours:
                 continue
@@ -75,14 +45,13 @@ def groupby_contours(img, contours):
                 merged_w = max(xa + wa, xc + wc) - merged_x   
 
                 merged_h = max(ya + ha, yc + hc) - merged_y
-                # roi = img[merged_y:merged_y+merged_h, merged_x:merged_x+merged_w]  # Crop the region of interest based on contour
                 
                 output.append(np.array([merged_x,merged_y,merged_w,merged_h]))
                 used_contours.add(i)
                 used_contours.add(j)
                 break 
 
-        if i not in used_contours : #and wa > 8 and ha > 8 : #made for filter semicolons and dots
+        if i not in used_contours : 
             output.append(np.array([xa,ya,wa,ha]))
     return output
 
@@ -121,7 +90,6 @@ def crop_characters(input_dir, output_dir):
             _, binary2 = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY_INV)# + cv2.THRESH_OTSU)
 
             contours, _ = cv2.findContours(binary2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            # cv2.imshow("binary",binary2)
             contours = groupby_contours(binary2, contours)
             linhas = cluster_lines(contours)
 
@@ -143,8 +111,6 @@ def crop_characters(input_dir, output_dir):
                     cv2.imwrite(output_path, char_image)
                     i += 1
 
-                    # Append bounding box (x, y, w, h) to bounding_boxes list
-                    # print((x, y, w, h))
                     bounding_boxes.append((x, y, w, h))
 
     return bounding_boxes
