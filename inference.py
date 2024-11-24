@@ -53,15 +53,17 @@ def infer_text():
     inference_dir = "./inference"
     predicted_chars = []
 
-    spacing_threshold = 1 
+    spacing_threshold = 5
     previous_x = 0
     previous_w = 0
     previous_char = ''
 
     image_files = sorted([f for f in os.listdir(inference_dir) if '_' in f and f.endswith('.png')])
+    print(image_files)
+    print(bounding_boxes)
 
-    for image_file, (x, w, _, _) in zip(image_files, bounding_boxes):
-        distance = max(0, x - (previous_x + previous_w))
+    for image_file, (x, y, w, _) in zip(image_files, bounding_boxes):
+        distance = abs(x - (previous_x + previous_w))
         print(f"Current x: {x}, Previous x+w: {previous_x + previous_w}, Distance: {distance}")
         if distance >= spacing_threshold:
             predicted_chars.append(" ") 

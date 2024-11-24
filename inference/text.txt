@@ -1,0 +1,1 @@
+In proof theory, proof nets are a geometrical method of representing proofs that eliminates two forms of bureaucracy that  differentiate proofs: (A) irrelevant syntactical
