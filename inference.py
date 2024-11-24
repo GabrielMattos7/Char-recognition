@@ -56,6 +56,7 @@ def infer_text():
     spacing_threshold = 1  # Adjust as needed for your font/spacing
     previous_x = 0
     previous_w = 0
+    previous_char = ''
 
     image_files = sorted([f for f in os.listdir(inference_dir) if '_' in f and f.endswith('.png')])
 
@@ -67,9 +68,10 @@ def infer_text():
         
         image_path = os.path.join(inference_dir, image_file)
         predicted_char = predict_character(image_path, scaler, model, label_encoder)
-        print(predicted_char)
+        print(f"PREVIOUS CHAR {previous_char} PREDICTED: {predicted_char}")
         predicted_chars.append(predicted_char)
         
+        previous_char = predicted_char
         previous_x = x
         previous_w = w
 
@@ -84,3 +86,4 @@ def infer_text():
 
 if __name__ == "__main__":
     infer_text()
+
